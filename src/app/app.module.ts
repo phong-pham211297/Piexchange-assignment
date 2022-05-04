@@ -1,15 +1,52 @@
+import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { HttpClientModule } from '@angular/common/http';
-import { ServiceModule } from 'src/services/index.module';
+import { ServiceModule } from './services/index.module';
+import { registerLocaleData } from '@angular/common';
+import en from '@angular/common/locales/en';
+import { FormsModule } from '@angular/forms';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { LayoutsModule } from './layouts/layouts.module';
+import { GifComponent } from './components/gif/gif.component';
+import { DBConfig } from 'ngx-indexed-db';
+import { NgxIndexedDBModule } from 'ngx-indexed-db';
+
+registerLocaleData(en);
+
+const dbConfig: DBConfig = {
+  name: 'MyDb',
+  version: 1,
+  objectStoresMeta: [
+    {
+      store: 'gif',
+      storeConfig: { keyPath: 'id', autoIncrement: true },
+      storeSchema: [
+        { name: 'id', keypath: 'id', options: { unique: false } },
+        { name: 'images', keypath: 'images', options: { unique: false } },
+        { name: 'import_datetime', keypath: 'import_datetime', options: { unique: false } },
+        { name: 'trending_datetime', keypath: 'trending_datetime', options: { unique: false } },
+        { name: 'rating', keypath: 'rating', options: { unique: false } },
+        { name: 'title', keypath: 'title', options: { unique: false } },
+        { name: 'user', keypath: 'user', options: { unique: false } },
+      ],
+    },
+  ],
+};
 
 @NgModule({
-  declarations: [AppComponent],
-  imports: [BrowserModule, AppRoutingModule, HttpClientModule, ServiceModule],
-  providers: [],
+  declarations: [AppComponent, GifComponent],
+  imports: [
+    BrowserModule,
+    AppRoutingModule,
+    HttpClientModule,
+    ServiceModule,
+    FormsModule,
+    BrowserAnimationsModule,
+    LayoutsModule,
+    NgxIndexedDBModule.forRoot(dbConfig),
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
