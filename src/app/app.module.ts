@@ -9,9 +9,9 @@ import en from '@angular/common/locales/en';
 import { FormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { LayoutsModule } from './layouts/layouts.module';
-import { GifComponent } from './components/gif/gif.component';
 import { DBConfig } from 'ngx-indexed-db';
 import { NgxIndexedDBModule } from 'ngx-indexed-db';
+import { ComponentsModule } from './components/index.module';
 
 registerLocaleData(en);
 
@@ -25,8 +25,16 @@ const dbConfig: DBConfig = {
       storeSchema: [
         { name: 'id', keypath: 'id', options: { unique: false } },
         { name: 'images', keypath: 'images', options: { unique: false } },
-        { name: 'import_datetime', keypath: 'import_datetime', options: { unique: false } },
-        { name: 'trending_datetime', keypath: 'trending_datetime', options: { unique: false } },
+        {
+          name: 'import_datetime',
+          keypath: 'import_datetime',
+          options: { unique: false },
+        },
+        {
+          name: 'trending_datetime',
+          keypath: 'trending_datetime',
+          options: { unique: false },
+        },
         { name: 'rating', keypath: 'rating', options: { unique: false } },
         { name: 'title', keypath: 'title', options: { unique: false } },
         { name: 'user', keypath: 'user', options: { unique: false } },
@@ -36,12 +44,13 @@ const dbConfig: DBConfig = {
 };
 
 @NgModule({
-  declarations: [AppComponent, GifComponent],
+  declarations: [AppComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
     ServiceModule,
+    ComponentsModule,
     FormsModule,
     BrowserAnimationsModule,
     LayoutsModule,

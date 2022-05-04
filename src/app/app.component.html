@@ -1,5 +1,8 @@
 <div class="app-wrapper">
   <div class="container">
     <app-header></app-header>
+    <div *ngFor="let item of list | async">
+      <app-gif [gif]="item"></app-gif>
+    </div>
   </div>
 </div>

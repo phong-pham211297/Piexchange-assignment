@@ -13,6 +13,9 @@ export class AppComponent implements OnInit, OnDestroy {
   //#region Props
   public title = 'piexchange-assignment';
 
+  // List trending
+  public list!: Observable<any[]>;
+
   // Create subcription for pages
   private _subscription: Subscription = new Subscription();
   //#endregion
@@ -26,6 +29,8 @@ export class AppComponent implements OnInit, OnDestroy {
 
   //#region Methods
   public ngOnInit(): void {
+    this.list = this.dbService.getAll('gif');
+    
     const getTrendingGiphiesSubscription = this.dbService
       .getAll('gif')
       .pipe(
@@ -65,7 +70,8 @@ export class AppComponent implements OnInit, OnDestroy {
           return this.dbService.bulkAdd('gif', gifsList);
         })
       )
-      .subscribe();
+      .subscribe(() => {
+      });
 
     this._subscription.add(getTrendingGiphiesSubscription);
   }

@@ -1,10 +1,11 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HeaderComponent } from './header/header.component';
+import { MainComponent } from './main/main.component';
 
 @NgModule({
-  declarations: [HeaderComponent],
+  declarations: [HeaderComponent, MainComponent],
   imports: [CommonModule],
-  exports: [HeaderComponent],
+  exports: [HeaderComponent, MainComponent],
 })
 export class LayoutsModule {}
