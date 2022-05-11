@@ -1,23 +1,39 @@
-import { OnInit, OnDestroy, Inject, Component } from '@angular/core';
-import { Subscription, Observable, of } from 'rxjs';
+import { AfterViewInit, TemplateRef } from '@angular/core';
+import { OnInit, OnDestroy, Inject, Component, ViewChild } from '@angular/core';
+import { Subscription, Observable, of, Subject, forkJoin } from 'rxjs';
 import { GiphyServiceApi } from './services/api/giphy/index.service';
 import { GIPHY_SERVICE_API_TOKEN } from './services/keys';
 import { NgxIndexedDBService } from 'ngx-indexed-db';
 import { mergeMap } from 'rxjs/operators';
+import { Category } from './models/category/index.model';
+import { cloneDeep } from 'lodash';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
 })
-export class AppComponent implements OnInit, OnDestroy {
+export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
   //#region Props
+
+  // Page title
   public title = 'piexchange-assignment';
 
-  // List trending
-  public list!: Observable<any[]>;
+  // @Viewchild
+  @ViewChild('trendingIcon') trendingIconTemplate!: TemplateRef<any>;
+  @ViewChild('artistIcon') artistIconTemplate!: TemplateRef<any>;
+  @ViewChild('clipIcon') clipIconTemplate!: TemplateRef<any>;
+  @ViewChild('storiesIcon') storiesIconTempalte!: TemplateRef<any>;
 
   // Create subcription for pages
   private _subscription: Subscription = new Subscription();
+
+  // Create subject for pages
+  private _getCategories: Subject<any> = new Subject();
+
+  private _getCategoriesObservable = this._getCategories.asObservable();
+
+  // MOCK categories
+  public categories: Category[] = [];
   //#endregion
 
   //#region Constructor
@@ -28,52 +44,112 @@ export class AppComponent implements OnInit, OnDestroy {
   //#endregion
 
   //#region Methods
-  public ngOnInit(): void {
-    this.list = this.dbService.getAll('gif');
-    
-    const getTrendingGiphiesSubscription = this.dbService
-      .getAll('gif')
+  public ngOnInit(): void {}
+
+  public ngAfterViewInit(): void {
+    this.categories = [
+      {
+        name: 'trending',
+        titleIcon: this.trendingIconTemplate,
+        navigatorText: 'All the GIFs',
+        gifs: [],
+      },
+      {
+        name: 'artist',
+        titleIcon: this.artistIconTemplate,
+        navigatorText: 'All GIPHY Artists',
+        gifs: [],
+      },
+      {
+        name: 'game',
+        titleIcon: this.storiesIconTempalte,
+        navigatorText: 'All GIPHY Game',
+        gifs: [],
+      },
+      {
+        name: 'dog',
+        titleIcon: this.clipIconTemplate,
+        navigatorText: 'All GIPHY Dog',
+        gifs: [],
+      },
+    ];
+
+    const getGiphiesSubscription = this._getCategoriesObservable
       .pipe(
-        mergeMap((gifs: any) => {
-          if (gifs && gifs.length) {
-            return of(null);
-          }
-
-          return this.giphyServiceApi.getTrendingGiphies(25, 'g');
-        }),
-        mergeMap((response) => {
-          if (!response || !response.data) {
-            return of(null);
-          }
-
-          const gifsList =
-            response?.data?.map((gif: any) => {
-              const {
-                id,
-                images,
-                import_datetime,
-                trending_datetime,
-                rating,
-                title,
-                user,
-              } = gif;
-              return {
-                id,
-                images,
-                import_datetime,
-                trending_datetime,
-                rating,
-                title,
-                user,
-              };
-            }) || [];
-          return this.dbService.bulkAdd('gif', gifsList);
+        mergeMap((categories) => {
+          return categories
+            ? of(categories)
+            : this.dbService.getAll('category');
         })
       )
-      .subscribe(() => {
+      .subscribe((gifs) => {
+        this.categories = this.categories.map((category: Category) => {
+          const result = cloneDeep(category);
+          result.gifs = gifs.find(
+            (gif: any) => gif?.name === category?.name
+          )?.gifs;
+          return result;
+        });
       });
 
-    this._subscription.add(getTrendingGiphiesSubscription);
+    const checkGiphiesSubscription = this.dbService
+      .getAll('category')
+      .pipe(
+        mergeMap((categories: any) => {
+          if (categories && categories.length) {
+            this._getCategories.next(categories);
+            return of(null);
+          }
+
+          return forkJoin({
+            trending: this.giphyServiceApi.getTrendingGiphiesAsync(25, 'g'),
+            game: this.giphyServiceApi.searchGifAsync('game'),
+            artist: this.giphyServiceApi.searchGifAsync('artist'),
+            dog: this.giphyServiceApi.searchGifAsync('dog'),
+          });
+        }),
+        // @ts-ignore
+        mergeMap((response) => {
+          if (!response) {
+            return of(null);
+          }
+
+          const categories = [] as any[];
+          for (const [key, value] of Object.entries(response)) {
+            const result = {} as { [key: string]: string };
+            result.gifs =
+              value?.data?.map((gif: any) => {
+                const {
+                  id,
+                  images,
+                  import_datetime,
+                  trending_datetime,
+                  rating,
+                  title,
+                  user,
+                } = gif;
+                return {
+                  id,
+                  images,
+                  import_datetime,
+                  trending_datetime,
+                  rating,
+                  title,
+                  user,
+                };
+              }) || [];
+            result.name = key;
+
+            categories.push(result);
+          }
+
+          return this.dbService.bulkAdd('category', categories);
+        })
+      )
+      .subscribe();
+
+    this._subscription.add(checkGiphiesSubscription);
+    this._subscription.add(getGiphiesSubscription);
   }
 
   public ngOnDestroy(): void {

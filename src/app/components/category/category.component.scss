@@ -1,0 +1,33 @@
+.category-head {
+  margin-bottom: 10px;
+
+  .category-head_title {
+    color: white;
+    font-size: 26px;
+    align-items: center;
+    display: flex;
+    color: rgb(255, 255, 255);
+
+    .category-head_title--icon {
+      margin-right: 10px;
+    }
+  }
+
+  .category-head_navigator {
+    color: white;
+    align-items: center;
+    display: flex;
+    font-size: 18px;
+    color: rgb(166, 166, 166);
+  }
+}
+
+.category-content {
+  overflow-x: auto;
+  scroll-behavior: smooth;
+
+  div {
+    width: max-content;
+    height: 140px;
+  }
+}

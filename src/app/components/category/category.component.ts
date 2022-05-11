@@ -1,18 +1,15 @@
-import { Component, OnInit, Input } from '@angular/core';
-
+import { Category } from 'src/app/models/category/index.model';
+import { Component, OnInit, Input, OnChanges } from '@angular/core';
 @Component({
   selector: 'app-category',
   templateUrl: './category.component.html',
   styleUrls: ['./category.component.scss'],
 })
-export class CategoryComponent implements OnInit {
+export class CategoryComponent implements OnInit, OnChanges {
   //#region Props
 
   // Input category
-  @Input('category') public category: any;
-
-  // Input category title
-  @Input('category-icon') public categoryIcon!: HTMLElement;
+  @Input('category') public category!: Category;
 
   //#endregion
 
@@ -24,5 +21,8 @@ export class CategoryComponent implements OnInit {
   //#region Methods
   public ngOnInit(): void {}
 
+  public ngOnChanges(): void {
+    console.log(this.category);
+  }
   //#endregion
 }

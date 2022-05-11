@@ -1,15 +1,45 @@
 <!-- Category header section -->
-<section class="category-head">
+<section class="category-head flex justify-between">
   <!-- Category head title -->
-  <div class="category-head_title">
-    {{}}
+  <div class="category-head_title flex">
+    <div class="category-head_title--icon">
+      <ng-container
+        [ngTemplateOutlet]="category?.titleIcon || null"
+      ></ng-container>
+    </div>
+
+    {{ category?.name }}
   </div>
 
   <!-- Category head navigator -->
-  <div class="category-head_navigator"></div>
+  <div class="category-head_navigator">
+    {{ category?.navigatorText }}
+    <svg
+      style="margin-left: 4px"
+      xmlns="http://www.w3.org/2000/svg"
+      width="14"
+      height="14"
+      fill="currentColor"
+      class="bi bi-chevron-right"
+      viewBox="0 0 16 16"
+    >
+      <path
+        stroke="#a6a6a6"
+        stroke-width="1"
+        fill-rule="evenodd"
+        d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"
+      />
+    </svg>
+  </div>
 </section>
 <!-- End section -->
 
 <!-- Category content section -->
-<section class="category-content"></section>
+<section class="category-content">
+  <div class="flex">
+    <ng-container *ngFor="let gif of category?.gifs">
+      <app-gif [gif]="gif" style="margin-right: 6px"></app-gif>
+    </ng-container>
+  </div>
+</section>
 <!-- End section -->

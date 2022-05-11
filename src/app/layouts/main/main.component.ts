@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
+import { Category } from 'src/app/models/category/index.model';
 
 @Component({
   selector: 'app-main',
@@ -7,6 +8,9 @@ import { Component, OnInit } from '@angular/core';
 })
 export class MainComponent implements OnInit {
   //#region Props
+
+  // Input categories
+  @Input('categories') categories!: Category[];
 
   //#endregion
 

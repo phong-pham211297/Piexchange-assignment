@@ -1,2 +1,7 @@
 <main>
+  <ng-container *ngFor="let category of categories">
+    <div class="category-wrapper">
+      <app-category [category]="category"></app-category>
+    </div>
+  </ng-container>
 </main>

@@ -17,12 +17,41 @@ export class GiphyServiceApi {
   //#region Methods
 
   // Get trending giphies
-  public getTrendingGiphies(limit: number, rating: string): Observable<any> {
+  public getTrendingGiphiesAsync(limit: number, rating: string): Observable<any> {
     return this.httpClient.get<any>(`${this.GIPHY_API_URL}trending`, {
       params: {
         api_key: this.GIPHY_API_KEY as string,
         limit,
         rating,
+      },
+    });
+  }
+
+  // Get categories
+  public getCategoriesAsync(): Observable<any> {
+    return this.httpClient.get<any>(`${this.GIPHY_API_URL}categories`, {
+      params: {
+        api_key: this.GIPHY_API_KEY as string,
+      },
+    });
+  }
+
+  // Get random category
+  public getGifRandomAsync(tag: string): Observable<any> {
+    return this.httpClient.get<any>(`${this.GIPHY_API_URL}random`, {
+      params: {
+        api_key: this.GIPHY_API_KEY as string,
+        tag,
+      },
+    });
+  }
+
+  // Get random category
+  public searchGifAsync(keyword: string): Observable<any> {
+    return this.httpClient.get<any>(`${this.GIPHY_API_URL}search`, {
+      params: {
+        api_key: this.GIPHY_API_KEY as string,
+        q: keyword,
       },
     });
   }

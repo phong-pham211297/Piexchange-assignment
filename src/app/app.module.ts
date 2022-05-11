@@ -20,24 +20,26 @@ const dbConfig: DBConfig = {
   version: 1,
   objectStoresMeta: [
     {
-      store: 'gif',
+      store: 'category',
       storeConfig: { keyPath: 'id', autoIncrement: true },
       storeSchema: [
-        { name: 'id', keypath: 'id', options: { unique: false } },
-        { name: 'images', keypath: 'images', options: { unique: false } },
-        {
-          name: 'import_datetime',
-          keypath: 'import_datetime',
-          options: { unique: false },
-        },
-        {
-          name: 'trending_datetime',
-          keypath: 'trending_datetime',
-          options: { unique: false },
-        },
-        { name: 'rating', keypath: 'rating', options: { unique: false } },
-        { name: 'title', keypath: 'title', options: { unique: false } },
-        { name: 'user', keypath: 'user', options: { unique: false } },
+        // { name: 'id', keypath: 'id', options: { unique: false } },
+        // { name: 'images', keypath: 'images', options: { unique: false } },
+        // {
+        //   name: 'import_datetime',
+        //   keypath: 'import_datetime',
+        //   options: { unique: false },
+        // },
+        // {
+        //   name: 'trending_datetime',
+        //   keypath: 'trending_datetime',
+        //   options: { unique: false },
+        // },
+        // { name: 'rating', keypath: 'rating', options: { unique: false } },
+        // { name: 'title', keypath: 'title', options: { unique: false } },
+        // { name: 'user', keypath: 'user', options: { unique: false } },
+        { name: 'name', keypath: 'name', options: { unique: false } },
+        { name: 'gifs', keypath: 'gifs', options: { unique: false } },
       ],
     },
   ],
