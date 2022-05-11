@@ -1,10 +1,12 @@
-<div class="app-wrapper">
+<div class="app-wrapper" #appWrapper>
   <div class="container">
     <section class="mb-8">
-      <app-header></app-header>
+      <app-header (keywordEmitter)="searchKeyword($event)"></app-header>
     </section>
 
-    <app-main [categories]="categories"></app-main>
+    <app-main [categories]="categories">
+      <h3 class="search-title">Search keyword: </h3>
+    </app-main>
   </div>
 </div>
 

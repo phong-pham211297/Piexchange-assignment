@@ -57,6 +57,7 @@ const dbConfig: DBConfig = {
     BrowserAnimationsModule,
     LayoutsModule,
     NgxIndexedDBModule.forRoot(dbConfig),
+    FormsModule,
   ],
   bootstrap: [AppComponent],
 })
