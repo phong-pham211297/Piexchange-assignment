@@ -56,6 +56,7 @@ export class GiphyServiceApi {
         api_key: this.GIPHY_API_KEY as string,
         q: keyword,
         offset,
+        limit: 25,
       },
     });
   }

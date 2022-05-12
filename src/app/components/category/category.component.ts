@@ -22,7 +22,6 @@ export class CategoryComponent implements OnInit, OnChanges {
   public ngOnInit(): void {}
 
   public ngOnChanges(): void {
-    console.log(this.category);
   }
   //#endregion
 }

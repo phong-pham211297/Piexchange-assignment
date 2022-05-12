@@ -1,5 +1,6 @@
 .app-wrapper {
   background-color: rgb(18, 18, 18);
+  min-height: 100vh;
 }
 
 .search-title {
@@ -8,4 +9,10 @@
   align-items: center;
   display: flex;
   color: rgb(255, 255, 255);
+}
+
+.search-gifs-wrapper {
+  div {
+    max-height: 280px;
+  }
 }

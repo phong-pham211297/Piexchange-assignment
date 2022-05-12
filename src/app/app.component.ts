@@ -12,11 +12,12 @@ import {
   Subject,
   forkJoin,
   fromEvent,
+  BehaviorSubject,
 } from 'rxjs';
 import { GiphyServiceApi } from './services/api/giphy/index.service';
 import { GIPHY_SERVICE_API_TOKEN } from './services/keys';
 import { NgxIndexedDBService } from 'ngx-indexed-db';
-import { map, mergeMap, tap } from 'rxjs/operators';
+import { map, mergeMap, tap, take, debounceTime } from 'rxjs/operators';
 import { Category } from './models/category/index.model';
 import { cloneDeep } from 'lodash';
 @Component({
@@ -52,11 +53,13 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
   public currentSearchPage = 0;
 
   // Current keyword
-  public currentKeyword = '';
+  public currentKeyword = 'global';
 
   // searchedd gifs
-  private _getSearchedGifsSubject: Subject<any[]> = new Subject<any[]>();
-  public _getSearchedGifsSubject$: Observable<any> =
+  private _getSearchedGifsSubject: BehaviorSubject<any[]> = new BehaviorSubject<
+    any[]
+  >([]);
+  public _getSearchedGifs$: Observable<any> =
     this._getSearchedGifsSubject.asObservable(); //#endregion
 
   //#region Constructor
@@ -68,13 +71,6 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
 
   //#region Methods
   public ngOnInit(): void {}
-
-  @HostListener('window:scroll', []) onWindowScroll() {
-    console.log(
-      window.scrollY + window.innerHeight,
-      document.body.scrollHeight
-    );
-  }
 
   public ngAfterViewInit(): void {
     this.categories = [
@@ -104,27 +100,53 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
       },
     ];
 
+    this._getSearchedGifs$.subscribe((data) => console.log(data));
+    this.addScrollHandling();
     this.getGiphies();
     this.checkGiphies();
 
-    console.log(this.appWrapper);
+    const getGiphiesSubscription = this.fetchGiphies().subscribe();
+    this._subscription.add(getGiphiesSubscription);
+  }
 
-    const appWrapperElement = this.appWrapper.nativeElement;
+  public addScrollHandling(): void {
+    const windowScrollHandlerSubscription = fromEvent(window, 'scroll')
+      .pipe(
+        debounceTime(1000),
+        mergeMap(() => {
+          const shouldFetchMore =
+            window.scrollY + window.innerHeight >
+            document.body.scrollHeight - 100;
 
-    fromEvent(window, 'scroll').pipe(
-      tap(() => console.log('run here')),
-      map(() => window!.scrollY),
-      mergeMap(() => {
-        return this.giphyServiceApi.searchGifAsync(
-          this.currentKeyword,
-          this.currentSearchPage * 25
-        );
-      }),
-      tap((response) => {
-        this.currentSearchPage++;
-      })
-    );
-    return;
+          if (shouldFetchMore) {
+            return this.fetchGiphies();
+          }
+
+          return of(null);
+        })
+      )
+      .subscribe();
+
+    this._subscription.add(windowScrollHandlerSubscription);
+  }
+
+  public fetchGiphies(): Observable<any> {
+    return this.giphyServiceApi
+      .searchGifAsync(this.currentKeyword, this.currentSearchPage * 25)
+      .pipe(
+        tap((response) => {
+          if (!response || !response.data) {
+            return;
+          }
+
+          this.currentSearchPage++;
+          this._getSearchedGifsSubject.next([
+            ...this._getSearchedGifsSubject.getValue(),
+            ...response.data,
+          ]);
+          return;
+        })
+      );
   }
 
   public getGiphies(): void {
@@ -138,7 +160,6 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
         })
       )
       .subscribe((gifs) => {
-        console.log('run here', gifs);
         this.categories = this.categories.map((category: Category) => {
           const result = cloneDeep(category);
           result.gifs = gifs.find(
@@ -218,10 +239,7 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
     this.currentSearchPage = 0;
     this.currentKeyword = keyword;
 
-    const searchGiphiesSubscription = this.giphyServiceApi.searchGifAsync(
-      keyword,
-      this.currentSearchPage * 25
-    );
+    this.fetchGiphies();
   }
 
   public ngOnDestroy(): void {

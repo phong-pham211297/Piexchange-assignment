@@ -1,11 +1,16 @@
-<div class="app-wrapper" #appWrapper>
+<div class="app-wrapper">
   <div class="container">
     <section class="mb-8">
       <app-header (keywordEmitter)="searchKeyword($event)"></app-header>
     </section>
 
     <app-main [categories]="categories">
-      <h3 class="search-title">Search keyword: </h3>
+      <h3 class="search-title">Search keyword:</h3>
+      <div class="search-gifs-wrapper flex flex-wrap">
+        <ng-container *ngFor="let gif of _getSearchedGifs$ | async">
+          <app-gif [gif]="gif" style="margin-right: 6px"></app-gif>
+        </ng-container>
+      </div>
     </app-main>
   </div>
 </div>
