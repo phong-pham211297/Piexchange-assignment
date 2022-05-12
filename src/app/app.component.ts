@@ -55,12 +55,14 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
   // Current keyword
   public currentKeyword = 'global';
 
-  // searchedd gifs
+  // searched gifs
   private _getSearchedGifsSubject: BehaviorSubject<any[]> = new BehaviorSubject<
     any[]
   >([]);
   public _getSearchedGifs$: Observable<any> =
-    this._getSearchedGifsSubject.asObservable(); //#endregion
+    this._getSearchedGifsSubject.asObservable();
+
+  //#endregion
 
   //#region Constructor
   public constructor(
@@ -100,13 +102,15 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
       },
     ];
 
-    this._getSearchedGifs$.subscribe((data) => console.log(data));
+    const seachedGifsSubscription = this._getSearchedGifs$.subscribe();
+    const getGiphiesSubscription = this.fetchGiphies().subscribe();
+
     this.addScrollHandling();
     this.getGiphies();
     this.checkGiphies();
 
-    const getGiphiesSubscription = this.fetchGiphies().subscribe();
     this._subscription.add(getGiphiesSubscription);
+    this._subscription.add(seachedGifsSubscription);
   }
 
   public addScrollHandling(): void {
@@ -130,7 +134,7 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
     this._subscription.add(windowScrollHandlerSubscription);
   }
 
-  public fetchGiphies(): Observable<any> {
+  public fetchGiphies(reset: boolean = false): Observable<any> {
     return this.giphyServiceApi
       .searchGifAsync(this.currentKeyword, this.currentSearchPage * 25)
       .pipe(
@@ -140,10 +144,11 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
           }
 
           this.currentSearchPage++;
-          this._getSearchedGifsSubject.next([
-            ...this._getSearchedGifsSubject.getValue(),
-            ...response.data,
-          ]);
+          this._getSearchedGifsSubject.next(
+            reset
+              ? [...response.data]
+              : [...this._getSearchedGifsSubject.getValue(), ...response.data]
+          );
           return;
         })
       );
@@ -237,9 +242,10 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
 
   public searchKeyword(keyword: string): void {
     this.currentSearchPage = 0;
-    this.currentKeyword = keyword;
+    this.currentKeyword = keyword || 'global';
 
-    this.fetchGiphies();
+    const getGiphiesSubscription = this.fetchGiphies(true).subscribe();
+    this._subscription.add(getGiphiesSubscription);
   }
 
   public ngOnDestroy(): void {

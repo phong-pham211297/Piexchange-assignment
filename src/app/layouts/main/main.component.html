@@ -1,9 +1,15 @@
 <main>
-  <ng-container *ngFor="let category of categories">
-    <div class="category-wrapper">
-      <app-category [category]="category"></app-category>
-    </div>
+  <!-- Categories section -->
+  <ng-container *ngIf="!shouldCategoriesHide">
+    <ng-container *ngFor="let category of categories">
+      <div class="category-wrapper">
+        <app-category [category]="category"></app-category>
+      </div>
+    </ng-container>
   </ng-container>
+  <!--End Categories section -->
 
+  <!-- Main content section  -->
   <ng-content></ng-content>
+  <!-- End Main content section  -->
 </main>

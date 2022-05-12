@@ -12,6 +12,8 @@ export class MainComponent implements OnInit {
   // Input categories
   @Input('categories') categories!: Category[];
 
+  // Input should categories hide
+  @Input('shouldCategoriesHide') shouldCategoriesHide!: boolean;
   //#endregion
 
   //#region Constructor

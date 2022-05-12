@@ -9,10 +9,29 @@
   align-items: center;
   display: flex;
   color: rgb(255, 255, 255);
+  margin-bottom: 10px;
 }
 
 .search-gifs-wrapper {
   div {
-    max-height: 280px;
+    height: 280px;
+    margin-bottom: 12px;
+    margin-right: 12px;
+
+    &:nth-child(4n) {
+      margin-right: 0px;
+    }
+  }
+}
+
+:host {
+  .search-gifs-wrapper {
+    ::ng-deep {
+      app-gif {
+        img {
+          width: 100%;
+        }
+      }
+    }
   }
 }

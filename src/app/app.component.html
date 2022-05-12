@@ -4,13 +4,23 @@
       <app-header (keywordEmitter)="searchKeyword($event)"></app-header>
     </section>
 
-    <app-main [categories]="categories">
-      <h3 class="search-title">Search keyword:</h3>
+    <app-main
+      [categories]="categories"
+      [shouldCategoriesHide]="
+        currentKeyword && currentKeyword !== 'global' ? true : false
+      "
+    >
+      <!-- Main Content  -->
+      <h3 class="search-title">Search keyword: {{ currentKeyword }}</h3>
       <div class="search-gifs-wrapper flex flex-wrap">
-        <ng-container *ngFor="let gif of _getSearchedGifs$ | async">
+        <div
+          *ngFor="let gif of _getSearchedGifs$ | async"
+          [ngStyle]="{ width: 'calc((100% - 36px)/4)' }"
+        >
           <app-gif [gif]="gif" style="margin-right: 6px"></app-gif>
-        </ng-container>
+        </div>
       </div>
+      <!-- End main content -->
     </app-main>
   </div>
 </div>
