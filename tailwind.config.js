@@ -3,7 +3,7 @@ module.exports = {
   darkMode: false, // or 'media' or 'class'
   theme: {
     container: {
-      padding: '1rem',
+      padding: "1rem",
       center: true,
       screens: {
         sm: "100%",

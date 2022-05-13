@@ -38,7 +38,11 @@
 <section class="category-content">
   <div class="flex">
     <ng-container *ngFor="let gif of category?.gifs">
-      <app-gif [gif]="gif" style="margin-right: 6px"></app-gif>
+      <app-gif
+        [gif]="gif"
+        style="margin-right: 6px"
+        [styles]="{ minWidth: '100px' }"
+      ></app-gif>
     </ng-container>
   </div>
 </section>

@@ -1,5 +1,41 @@
-img {
+.gif-wrapper {
   height: 100%;
-  border-radius: 4px;
-  cursor: pointer;
+  position: relative;
+
+  img {
+    height: 100%;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+
+  .backdrop-wrapper {
+    position: relative;
+  }
+}
+
+.fill-blue-600 {
+  fill: #1c64f2;
+}
+
+.text-gray-200 {
+  --tw-text-opacity: 1;
+  color: rgb(229 231 235 / var(--tw-text-opacity));
+}
+
+.spinner {
+  position: absolute;
+  left: 0;
+  right: 0;
+  margin-left: auto;
+  margin-right: auto;
+  top: 46%;
+}
+
+.user-avatar {
+  img {
+    min-width: 160px;
+    min-height: 160px;
+    max-width: 160px;
+    max-height: 160px;
+  }
 }
