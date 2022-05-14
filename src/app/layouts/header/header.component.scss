@@ -66,7 +66,7 @@
   }
 
   .search-icon-wrapper {
-    width: 52px;
+    width: 64px;
     height: 52px;
     position: relative;
     display: flex;
@@ -89,5 +89,12 @@
       display: flex;
       z-index: 1;
     }
+  }
+
+  .btn-upload {
+    background: linear-gradient(45deg, #9933ff 0%, #ff6666 100%);
+    border: transparent;
+    border-radius: 0px;
+    color: white;
   }
 }

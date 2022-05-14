@@ -20,6 +20,7 @@ import { NgxIndexedDBService } from 'ngx-indexed-db';
 import { map, mergeMap, tap, take, debounceTime } from 'rxjs/operators';
 import { Category } from './models/category/index.model';
 import { cloneDeep } from 'lodash';
+import { UploadComponent } from './components/upload/upload.component';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -37,6 +38,7 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild('clipIcon') clipIconTemplate!: TemplateRef<any>;
   @ViewChild('storiesIcon') storiesIconTempalte!: TemplateRef<any>;
   @ViewChild('appWrapper') appWrapper!: ElementRef<any>;
+  @ViewChild('appUpload') appUpload!: UploadComponent;
 
   // Create subcription for pages
   private _subscription: Subscription = new Subscription();
@@ -48,6 +50,9 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
 
   // MOCK categories
   public categories: Category[] = [];
+
+  // Is modal upload visible
+  public isModalUploadVisible: boolean = false;
 
   // current page
   public currentSearchPage = 0;
@@ -246,6 +251,11 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
 
     const getGiphiesSubscription = this.fetchGiphies(true).subscribe();
     this._subscription.add(getGiphiesSubscription);
+  }
+
+  public uploadClickHandler(): void {
+    this.appUpload.setModalVisible(true);
+    return;
   }
 
   public ngOnDestroy(): void {

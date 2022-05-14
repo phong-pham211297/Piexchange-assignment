@@ -1,7 +1,10 @@
 <div class="app-wrapper">
   <div class="container">
     <section class="mb-8">
-      <app-header (keywordEmitter)="searchKeyword($event)"></app-header>
+      <app-header
+        (keywordEmitter)="searchKeyword($event)"
+        (uploadEventClickEmitter)="uploadClickHandler()"
+      ></app-header>
     </section>
 
     <app-main
@@ -24,6 +27,8 @@
     </app-main>
   </div>
 </div>
+
+<app-upload #appUpload></app-upload>
 
 <ng-template #trendingIcon>
   <svg

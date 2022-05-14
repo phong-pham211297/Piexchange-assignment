@@ -1,0 +1,85 @@
+.modal-wrapper {
+  background: linear-gradient(
+    45deg,
+    rgb(97, 87, 255) 0%,
+    rgb(0, 204, 255) 100%
+  );
+  border-radius: inherit;
+  color: white;
+  text-align: center;
+
+  .modal-body {
+    padding: 60px 80px 40px;
+
+    .btn-close {
+      position: absolute;
+      right: 10px;
+      top: 10px;
+      margin: 0px;
+    }
+  }
+}
+
+.title {
+  margin: 0px auto 40px;
+
+  h3 {
+    font-size: 36px;
+    margin-bottom: 15px;
+  }
+
+  p {
+    max-width: 400px;
+    margin: auto;
+  }
+}
+
+.gif-upload-wrapper {
+  background: rgba(236, 236, 236, 0.1);
+  border-radius: 4px;
+  font-size: 15px;
+  max-width: 400px;
+  margin: auto;
+
+  .gif-upload {
+    position: relative;
+    padding-top: 20px;
+
+    svg {
+      margin: auto;
+      margin-bottom: 15px;
+    }
+
+    .gif-upload_title {
+      font-size: 17px;
+      font-weight: 900;
+    }
+
+    .gif-upload_choose {
+      background-color: rgba(255, 255, 255, 0.15);
+      color: rgb(255, 255, 255);
+      font-size: 15px;
+      font-weight: bold;
+      height: 36px;
+      line-height: 36px;
+      padding: 0px 12px;
+      text-align: center;
+    }
+
+    .gif-upload_text {
+      margin-bottom: 20px;
+    }
+
+    .gif-upload_input {
+      cursor: pointer;
+      height: 100%;
+      left: 0px;
+      margin: 0px;
+      opacity: 0;
+      padding: 0px;
+      position: absolute;
+      top: 0px;
+      width: 100%;
+    }
+  }
+}

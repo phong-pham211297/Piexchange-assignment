@@ -11,6 +11,9 @@ export class HeaderComponent implements OnInit {
   // Key word emitter
   @Output() keywordEmitter = new EventEmitter<string>();
 
+  // Upload event click emitter
+  @Output() uploadEventClickEmitter = new EventEmitter<any>();
+
   // Keyword
   public keyword: string = '';
 
@@ -26,6 +29,12 @@ export class HeaderComponent implements OnInit {
 
   public onSearch(): void {
     this.keywordEmitter.emit(this.keyword);
+    return;
+  }
+
+  public handleUploadClick(): void {
+    this.uploadEventClickEmitter.emit();
+    return;
   }
 
   //#endregion

@@ -18,6 +18,9 @@ export class GifComponent implements OnInit {
   // Is loading
   public isLoading: boolean = true;
 
+  // Is loading detail
+  public isDetailLoading: boolean = true;
+
   // Is modal visible
   public isModalVisible: boolean = false;
   //#endregion
@@ -33,6 +36,12 @@ export class GifComponent implements OnInit {
   // On image loading
   public onImageLoad(): void {
     this.isLoading = false;
+    return;
+  }
+
+  // On image loading
+  public onImageDetailLoad(): void {
+    this.isDetailLoading = false;
     return;
   }
 
