@@ -13,6 +13,23 @@
         currentKeyword && currentKeyword !== 'global' ? true : false
       "
     >
+      <h3
+        class="search-title"
+        *ngIf="currentKeyword && currentKeyword !== 'global' ? false : true"
+      >
+        My gifs
+      </h3>
+      <div
+        class="my-gifs-wrapper"
+        *ngIf="currentKeyword && currentKeyword !== 'global' ? false : true"
+      >
+        <div class="my-gifs flex">
+          <div *ngFor="let gif of myGifs | async">
+            <img [src]="gif?.gif" style="margin-right: 6px" />
+          </div>
+        </div>
+      </div>
+
       <!-- Main Content  -->
       <h3 class="search-title">Search keyword: {{ currentKeyword }}</h3>
       <div class="search-gifs-wrapper flex flex-wrap">
@@ -28,7 +45,7 @@
   </div>
 </div>
 
-<app-upload #appUpload></app-upload>
+<app-upload (uploadEventEmitter)="uploadEmitHandler()" #appUpload></app-upload>
 
 <ng-template #trendingIcon>
   <svg

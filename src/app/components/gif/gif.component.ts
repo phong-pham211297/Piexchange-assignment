@@ -23,6 +23,9 @@ export class GifComponent implements OnInit {
 
   // Is modal visible
   public isModalVisible: boolean = false;
+
+  // Is profile image loading
+  public isImageProfileLoading: boolean = true;
   //#endregion
 
   //#region Constructor
@@ -36,6 +39,11 @@ export class GifComponent implements OnInit {
   // On image loading
   public onImageLoad(): void {
     this.isLoading = false;
+    return;
+  }
+
+  public onProfileImageLoad(): void {
+    this.isImageProfileLoading = false;
     return;
   }
 

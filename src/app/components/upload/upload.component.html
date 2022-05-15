@@ -4,18 +4,7 @@
   id="defaultModal"
   tabindex="-1"
   aria-hidden="true"
-  class="
-    overflow-y-auto overflow-x-hidden
-    fixed
-    top-0
-    right-0
-    left-0
-    z-50
-    w-full
-    md:inset-0
-    h-modal
-    md:h-full
-  "
+  class="overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 w-full md:inset-0 h-modal md:h-full"
 >
   <div class="relative container h-full md:h-auto mx-auto mt-20">
     <!-- Modal content -->
@@ -32,48 +21,95 @@
           </p>
         </section>
 
-        <div class="gif-upload-wrapper">
+        <div
+          class="gif-upload-wrapper"
+          [ngStyle]="{
+            maxWidth:
+              filesUploaded && filesUploaded.length <= 0
+                ? '400px'
+                : 'fit-content'
+          }"
+        >
           <div class="gif-upload">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 26 26"
-              width="40"
-              height="40"
+            <!-- Empty section -->
+            <div
+              class="empty-file"
+              *ngIf="
+                filesUploaded && filesUploaded.length <= 0;
+                else multipleeFileTemplate
+              "
             >
-              <path
-                d="M20 0a6 6 0 016 6v14a6 6 0 01-6 6H6a6 6 0 01-6-6V6a6 6 0 016-6h14zM7.928 9C5.196 9 3.95 10.933 3.95 12.815S5.04 16.6 7.918 16.6c1.402 0 2.67-.494 3.127-1.409v-3.198H7.492v1.594h1.839v.925c-.416.299-1.018.37-1.403.37-1.464 0-1.952-1.141-1.952-2.067 0-1.409.768-2.108 1.952-2.108.489 0 1.133.134 1.662.628l1.195-1.173C9.829 9.206 8.936 9 7.928 9zm6.673.206h-2.047v7.199h2.047v-7.2zm7.399 0h-5.578v7.199h2.036v-2.479h3.324V12.26h-3.324v-1.347H22V9.206z"
-                fill="#FFF"
-                fill-rule="evenodd"
-              ></path>
-            </svg>
-            <h3 class="gif-upload_title">GIF</h3>
-            <p class="gif-upload_text">Upload a GIF</p>
-            <div class="gif-upload_choose">Choose File</div>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 26 26"
+                width="40"
+                height="40"
+              >
+                <path
+                  d="M20 0a6 6 0 016 6v14a6 6 0 01-6 6H6a6 6 0 01-6-6V6a6 6 0 016-6h14zM7.928 9C5.196 9 3.95 10.933 3.95 12.815S5.04 16.6 7.918 16.6c1.402 0 2.67-.494 3.127-1.409v-3.198H7.492v1.594h1.839v.925c-.416.299-1.018.37-1.403.37-1.464 0-1.952-1.141-1.952-2.067 0-1.409.768-2.108 1.952-2.108.489 0 1.133.134 1.662.628l1.195-1.173C9.829 9.206 8.936 9 7.928 9zm6.673.206h-2.047v7.199h2.047v-7.2zm7.399 0h-5.578v7.199h2.036v-2.479h3.324V12.26h-3.324v-1.347H22V9.206z"
+                  fill="#FFF"
+                  fill-rule="evenodd"
+                ></path>
+              </svg>
+              <h3 class="gif-upload_title">GIF</h3>
+              <p class="gif-upload_text">Upload a GIF</p>
+            </div>
 
-            <input
-              class="gif-upload_input"
-              type="file"
-              accept="image/gif"
-              multiple="true"
-              (change)="handleFileInput($event?.target)"
-            />
+            <!-- Multiple files section -->
+            <ng-template #multipleeFileTemplate>
+              <div class="multiple-files flex flex-wrap">
+                <div *ngFor="let item of filesUploaded; let i = index">
+                  <img [src]="item" alt="Fall back image" />
+                  <svg
+                    (click)="removeFileClickHandler($event, i)"
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="20"
+                    height="20"
+                    fill="white"
+                    class="bi bi-x-circle-fill"
+                    viewBox="0 0 16 16"
+                  >
+                    <path
+                      d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293 5.354 4.646z"
+                    />
+                  </svg>
+                </div>
+              </div>
+            </ng-template>
+
+            <div
+              class="gif-upload_choose"
+              [ngStyle]="{
+                position:
+                  filesUploaded && filesUploaded.length <= 0 ? '' : 'relative',
+                borderBottom:
+                  filesUploaded && filesUploaded.length <= 0 ? '' : '1px solid'
+              }"
+            >
+              Choose File
+
+              <input
+                class="gif-upload_input"
+                type="file"
+                accept="image/gif"
+                multiple="true"
+                (change)="handleFileInput($event?.target)"
+              />
+            </div>
+
+            <div
+              class="gif-upload_choose"
+              *ngIf="filesUploaded && filesUploaded.length > 0"
+              (click)="upload()"
+            >
+              Upload
+            </div>
           </div>
         </div>
 
         <button
           type="button"
-          class="
-            btn-close
-            bg-transparent
-            hover:bg-gray-200 hover:text-gray-900
-            rounded-lg
-            text-sm
-            p-1.5
-            ml-auto
-            inline-flex
-            items-center
-            dark:hover:bg-gray-600 dark:hover:text-white
-          "
+          class="btn-close bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white"
           (click)="setModalVisible(false)"
         >
           <svg

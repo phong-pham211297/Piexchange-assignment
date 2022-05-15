@@ -24,6 +24,21 @@
   }
 }
 
+.my-gifs-wrapper {
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  margin-bottom: 2rem;
+
+  .my-gifs {
+    width: max-content;
+    height: 140px;
+
+    img {
+      height: 100%;
+    }
+  }
+}
+
 :host {
   .search-gifs-wrapper {
     ::ng-deep {

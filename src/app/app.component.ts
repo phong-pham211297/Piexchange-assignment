@@ -1,5 +1,6 @@
 import {
   AfterViewInit,
+  ChangeDetectorRef,
   ElementRef,
   HostListener,
   TemplateRef,
@@ -67,12 +68,16 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
   public _getSearchedGifs$: Observable<any> =
     this._getSearchedGifsSubject.asObservable();
 
+  // My gifs
+  public myGifs!: Observable<any[]>;
+
   //#endregion
 
   //#region Constructor
   public constructor(
     @Inject(GIPHY_SERVICE_API_TOKEN) public giphyServiceApi: GiphyServiceApi,
-    private dbService: NgxIndexedDBService
+    private dbService: NgxIndexedDBService,
+    public changeDetector: ChangeDetectorRef
   ) {}
   //#endregion
 
@@ -109,7 +114,7 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
 
     const seachedGifsSubscription = this._getSearchedGifs$.subscribe();
     const getGiphiesSubscription = this.fetchGiphies().subscribe();
-
+    this.myGifs = this.dbService.getAll('myGif');
     this.addScrollHandling();
     this.getGiphies();
     this.checkGiphies();
@@ -255,6 +260,11 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
 
   public uploadClickHandler(): void {
     this.appUpload.setModalVisible(true);
+    return;
+  }
+
+  public uploadEmitHandler(): void {
+    this.myGifs = this.dbService.getAll('myGif');
     return;
   }
 
